@@ -1,0 +1,1826 @@
+<title>SoD Conflict Matrix</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+/* ─── Token System ─── */
+:root {
+  --bg:           #F5F6F8;
+  --surface:      #FFFFFF;
+  --surface-2:    #EEF0F4;
+  --border:       #D4D8E1;
+  --border-light: #E8EBF0;
+
+  --navy:         #0D1F3C;
+  --navy-mid:     #1A3460;
+  --navy-light:   #2B4C8C;
+  --navy-ghost:   #EBF0FA;
+
+  --text-primary:   #0D1F3C;
+  --text-secondary: #4A5568;
+  --text-muted:     #8A94A6;
+  --text-inverse:   #FFFFFF;
+
+  --red:         #C0192A;
+  --red-light:   #FEF1F2;
+  --red-mid:     #FECDD3;
+  --red-dark:    #9B1221;
+
+  --amber:       #B45309;
+  --amber-light: #FFFBEB;
+  --amber-mid:   #FDE68A;
+  --amber-dark:  #92400E;
+
+  --green:       #047857;
+  --green-light: #ECFDF5;
+  --green-mid:   #A7F3D0;
+  --green-dark:  #065F46;
+
+  --gray-cell:   #F1F3F6;
+
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  --radius-sm: 4px;
+  --radius:    8px;
+  --radius-lg: 12px;
+
+  --shadow-sm: 0 1px 3px rgba(13,31,60,0.08), 0 1px 2px rgba(13,31,60,0.04);
+  --shadow:    0 4px 12px rgba(13,31,60,0.10), 0 2px 4px rgba(13,31,60,0.06);
+  --shadow-lg: 0 16px 40px rgba(13,31,60,0.14), 0 4px 12px rgba(13,31,60,0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:           #0A1220;
+    --surface:      #111C2E;
+    --surface-2:    #1A2740;
+    --border:       #2A3A55;
+    --border-light: #1E2E48;
+
+    --navy:         #E8EDF5;
+    --navy-mid:     #A8B8D4;
+    --navy-light:   #6B84AC;
+    --navy-ghost:   #1A2740;
+
+    --text-primary:   #E8EDF5;
+    --text-secondary: #9AABCA;
+    --text-muted:     #556580;
+    --text-inverse:   #0A1220;
+
+    --red:         #F87171;
+    --red-light:   #1F0D0E;
+    --red-mid:     #7F1D1D;
+    --red-dark:    #FCA5A5;
+
+    --amber:       #FBB737;
+    --amber-light: #1C1202;
+    --amber-mid:   #78350F;
+    --amber-dark:  #FDE68A;
+
+    --green:       #34D399;
+    --green-light: #052016;
+    --green-mid:   #064E3B;
+    --green-dark:  #6EE7B7;
+
+    --gray-cell:   #16213A;
+
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow:    0 4px 12px rgba(0,0,0,0.35);
+    --shadow-lg: 0 16px 40px rgba(0,0,0,0.45);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg:           #0A1220;
+  --surface:      #111C2E;
+  --surface-2:    #1A2740;
+  --border:       #2A3A55;
+  --border-light: #1E2E48;
+  --navy:         #E8EDF5;
+  --navy-mid:     #A8B8D4;
+  --navy-light:   #6B84AC;
+  --navy-ghost:   #1A2740;
+  --text-primary:   #E8EDF5;
+  --text-secondary: #9AABCA;
+  --text-muted:     #556580;
+  --text-inverse:   #0A1220;
+  --red:         #F87171;
+  --red-light:   #1F0D0E;
+  --red-mid:     #7F1D1D;
+  --red-dark:    #FCA5A5;
+  --amber:       #FBB737;
+  --amber-light: #1C1202;
+  --amber-mid:   #78350F;
+  --amber-dark:  #FDE68A;
+  --green:       #34D399;
+  --green-light: #052016;
+  --green-mid:   #064E3B;
+  --green-dark:  #6EE7B7;
+  --gray-cell:   #16213A;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow:    0 4px 12px rgba(0,0,0,0.35);
+  --shadow-lg: 0 16px 40px rgba(0,0,0,0.45);
+}
+
+/* ─── Reset & Base ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ─── Header ─── */
+.site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #0D1F3C 0%, #1A3460 100%);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brand-icon svg { width: 18px; height: 18px; }
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.brand-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+
+.brand-sub {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-tag {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.header-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--navy-ghost);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--navy-light);
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.theme-toggle {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 5px 8px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1;
+  transition: background 0.15s;
+}
+.theme-toggle:hover { background: var(--border); }
+.theme-toggle:focus-visible { outline: 2px solid var(--navy-light); outline-offset: 2px; }
+
+/* ─── Main Layout ─── */
+.main { max-width: 1600px; margin: 0 auto; padding: 32px 32px 64px; }
+
+/* ─── Section headers ─── */
+.section-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-bottom: 4px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-wrap: balance;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.section-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  max-width: 640px;
+}
+
+.section-header {
+  margin-bottom: 20px;
+}
+
+/* ─── Matrix Section ─── */
+.matrix-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.matrix-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.matrix-title-group { display: flex; flex-direction: column; gap: 2px; }
+.matrix-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+.matrix-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ─── Legend ─── */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.legend-swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.legend-swatch.prohibited { background: var(--red-light); border: 1.5px solid var(--red-mid); color: var(--red); }
+.legend-swatch.mitigated  { background: var(--amber-light); border: 1.5px solid var(--amber-mid); color: var(--amber); }
+.legend-swatch.compatible { background: var(--green-light); border: 1.5px solid var(--green-mid); color: var(--green); }
+.legend-swatch.na         { background: var(--gray-cell); border: 1.5px solid var(--border); color: var(--text-muted); }
+
+/* ─── Matrix Wrapper ─── */
+.matrix-wrap {
+  overflow: auto;
+  max-height: 540px;
+  position: relative;
+}
+
+/* Custom scrollbar */
+.matrix-wrap::-webkit-scrollbar { width: 8px; height: 8px; }
+.matrix-wrap::-webkit-scrollbar-track { background: var(--surface-2); }
+.matrix-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.matrix-wrap::-webkit-scrollbar-thumb:hover { background: var(--navy-light); }
+.matrix-wrap::-webkit-scrollbar-corner { background: var(--surface-2); }
+
+/* ─── Matrix Table ─── */
+.matrix-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12px;
+  min-width: 100%;
+}
+
+/* Sticky corner */
+.matrix-table thead tr th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 30;
+  background: var(--surface-2);
+  border-right: 2px solid var(--border);
+  border-bottom: 2px solid var(--border);
+  min-width: 148px;
+  width: 148px;
+  padding: 8px 10px;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+}
+
+/* Column headers */
+.matrix-table thead tr th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--surface-2);
+  border-bottom: 2px solid var(--border);
+  border-right: 1px solid var(--border-light);
+  padding: 0;
+  min-width: 52px;
+  width: 52px;
+}
+
+.col-header-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 4px;
+  gap: 4px;
+  cursor: default;
+}
+
+.col-abbr {
+  font-weight: 700;
+  font-size: 10px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+.col-num {
+  font-size: 9px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  background: var(--border-light);
+  border-radius: 2px;
+  padding: 0 3px;
+}
+
+/* Row headers */
+.matrix-table tbody tr td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  background: var(--surface-2);
+  border-right: 2px solid var(--border);
+  border-bottom: 1px solid var(--border-light);
+  padding: 6px 10px;
+  min-width: 148px;
+  width: 148px;
+}
+
+.row-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.row-name {
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.row-abbr {
+  font-size: 9px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Matrix cells */
+.matrix-table tbody tr td.cell {
+  border-right: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+  padding: 0;
+  text-align: center;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.cell-inner {
+  width: 52px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: filter 0.12s;
+  position: relative;
+}
+
+.cell-inner:hover { filter: brightness(0.88); }
+.cell-inner:focus-visible { outline: 2px solid var(--navy-light); outline-offset: -2px; border-radius: 2px; }
+
+.cell-inner.prohibited { background: var(--red-light); }
+.cell-inner.mitigated  { background: var(--amber-light); }
+.cell-inner.compatible { background: var(--green-light); }
+.cell-inner.na         { background: var(--gray-cell); cursor: default; }
+.cell-inner.na:hover   { filter: none; }
+
+.cell-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.prohibited .cell-icon { color: var(--red); }
+.mitigated  .cell-icon { color: var(--amber); }
+.compatible .cell-icon { color: var(--green); }
+.na         .cell-icon { color: var(--text-muted); font-size: 11px; }
+
+/* ─── Modal ─── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 18, 32, 0.65);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  max-width: 560px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(12px);
+  transition: transform 0.18s;
+}
+
+.modal-overlay.open .modal {
+  transform: translateY(0);
+}
+
+.modal-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modal-header-left { display: flex; flex-direction: column; gap: 6px; }
+
+.modal-status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+}
+
+.modal-status-badge.prohibited {
+  background: var(--red-light);
+  color: var(--red);
+  border: 1px solid var(--red-mid);
+}
+.modal-status-badge.mitigated {
+  background: var(--amber-light);
+  color: var(--amber);
+  border: 1px solid var(--amber-mid);
+}
+.modal-status-badge.compatible {
+  background: var(--green-light);
+  color: var(--green);
+  border: 1px solid var(--green-mid);
+}
+
+.modal-risk-type {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+.modal-conflict-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  line-height: 1.3;
+}
+
+.modal-roles {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.modal-close {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: background 0.12s;
+}
+.modal-close:hover { background: var(--border); }
+.modal-close:focus-visible { outline: 2px solid var(--navy-light); outline-offset: 2px; }
+
+.modal-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+
+.modal-block { display: flex; flex-direction: column; gap: 8px; }
+
+.modal-block-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.modal-block-content {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.fraud-scenario {
+  background: var(--red-light);
+  border-left: 3px solid var(--red);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.mitigated-scenario {
+  background: var(--amber-light);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.controls-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.control-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--navy-ghost);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--navy-light);
+  font-weight: 500;
+  width: fit-content;
+}
+
+.control-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.remediation-box {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ─── Risk Scorer ─── */
+.scorer-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.scorer-toolbar {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.scorer-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 360px;
+}
+
+@media (max-width: 860px) {
+  .scorer-grid { grid-template-columns: 1fr; }
+}
+
+.role-picker {
+  border-right: 1px solid var(--border);
+  padding: 16px;
+  overflow-y: auto;
+  max-height: 480px;
+}
+
+.role-picker::-webkit-scrollbar { width: 6px; }
+.role-picker::-webkit-scrollbar-track { background: transparent; }
+.role-picker::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.role-picker-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.role-check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.role-check-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.role-check-item:hover { background: var(--surface-2); }
+.role-check-item.selected { background: var(--navy-ghost); }
+
+.role-check-item input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--navy-mid);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.role-check-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+.role-check-abbr {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ─── Risk Dashboard ─── */
+.risk-dashboard {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  max-height: 480px;
+}
+
+.risk-dashboard::-webkit-scrollbar { width: 6px; }
+.risk-dashboard::-webkit-scrollbar-track { background: transparent; }
+.risk-dashboard::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.risk-score-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.risk-score-display {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.risk-score-number {
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  transition: color 0.3s;
+}
+
+.risk-score-number.low    { color: var(--green); }
+.risk-score-number.medium { color: var(--amber); }
+.risk-score-number.high   { color: var(--red); }
+
+.risk-score-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.risk-meter-wrap {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 6px;
+}
+
+.risk-meter-track {
+  height: 10px;
+  background: var(--surface-2);
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.risk-meter-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s;
+  width: 0%;
+}
+
+.risk-meter-fill.low    { background: linear-gradient(90deg, var(--green), #10b981); }
+.risk-meter-fill.medium { background: linear-gradient(90deg, var(--amber), #f59e0b); }
+.risk-meter-fill.high   { background: linear-gradient(90deg, var(--red), #ef4444); }
+
+.risk-meter-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.risk-level-badge {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  transition: color 0.3s;
+}
+
+.risk-level-badge.low    { color: var(--green); }
+.risk-level-badge.medium { color: var(--amber); }
+.risk-level-badge.high   { color: var(--red); }
+
+/* Conflict lists */
+.conflict-group { display: flex; flex-direction: column; gap: 8px; }
+
+.conflict-group-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.conflict-group-header .badge-count {
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.badge-count.red    { background: var(--red-light); color: var(--red); border: 1px solid var(--red-mid); }
+.badge-count.amber  { background: var(--amber-light); color: var(--amber); border: 1px solid var(--amber-mid); }
+.badge-count.green  { background: var(--green-light); color: var(--green); border: 1px solid var(--green-mid); }
+
+.conflict-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid;
+}
+
+.conflict-item.prohibited-item {
+  background: var(--red-light);
+  border-color: var(--red-mid);
+}
+
+.conflict-item.mitigated-item {
+  background: var(--amber-light);
+  border-color: var(--amber-mid);
+}
+
+.conflict-item.safe-item {
+  background: var(--green-light);
+  border-color: var(--green-mid);
+}
+
+.conflict-item-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.conflict-item-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.conflict-item-action {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.prohibited-item .conflict-item-action { color: var(--red); }
+.mitigated-item .conflict-item-action  { color: var(--amber); }
+.safe-item .conflict-item-action       { color: var(--green); }
+
+/* IGA Platform section */
+.iga-section {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.iga-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.iga-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.iga-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.iga-indicator.red   { background: var(--red); }
+.iga-indicator.amber { background: var(--amber); }
+.iga-indicator.green { background: var(--green); }
+
+.iga-row-text { color: var(--text-secondary); line-height: 1.5; }
+.iga-row-text strong { color: var(--text-primary); }
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.empty-state-icon {
+  font-size: 28px;
+  opacity: 0.4;
+}
+
+.empty-state-text {
+  font-size: 13px;
+  color: var(--text-muted);
+  max-width: 240px;
+  line-height: 1.5;
+}
+
+/* ─── Stats Cards ─── */
+.stats-section { display: flex; flex-direction: column; gap: 16px; }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-card-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.stat-card-number {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-card-number.navy  { color: var(--navy-mid); }
+.stat-card-number.red   { color: var(--red); }
+.stat-card-number.amber { color: var(--amber); }
+.stat-card-number.green { color: var(--green); }
+
+.stat-card-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.stat-card-pct {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-top: 2px;
+  width: fit-content;
+}
+
+.stat-card-pct.red   { background: var(--red-light); color: var(--red); }
+.stat-card-pct.amber { background: var(--amber-light); color: var(--amber); }
+.stat-card-pct.green { background: var(--green-light); color: var(--green); }
+.stat-card-pct.navy  { background: var(--navy-ghost); color: var(--navy-light); }
+
+.governance-footer {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.gov-meta-group {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.gov-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gov-meta-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.gov-meta-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.gov-owner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--navy-ghost);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--navy-light);
+}
+
+/* ─── Divider ─── */
+.section-divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: 0;
+}
+
+/* ─── Utility ─── */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+
+<!-- Site Header -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="6" height="6" rx="1" fill="#5B8DEF"/>
+          <rect x="10" y="2" width="6" height="6" rx="1" fill="#F87171"/>
+          <rect x="2" y="10" width="6" height="6" rx="1" fill="#34D399"/>
+          <rect x="10" y="10" width="6" height="6" rx="1" fill="#FBB737"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">SoD Conflict Matrix</span>
+        <span class="brand-sub">IAM Governance · Risk Analysis</span>
+      </div>
+    </div>
+    <div class="header-meta">
+      <span class="header-tag">NIST 800-53 · SOX · COSO</span>
+      <div class="header-badge">
+        <div class="pulse-dot"></div>
+        Q2 2024
+      </div>
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle color theme">
+        ☽
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- ═══ SECTION 1: SoD MATRIX ═══ -->
+  <section aria-labelledby="matrix-heading" style="margin-bottom: 28px;">
+    <div class="section-header">
+      <p class="section-eyebrow">Section 01 — Conflict Reference</p>
+      <h1 class="section-title" id="matrix-heading">Separation of Duties Conflict Matrix</h1>
+      <p class="section-desc">Role pair compatibility across enterprise access domains. Click any cell to view conflict detail, applicable NIST controls, and remediation guidance.</p>
+    </div>
+
+    <div class="matrix-section">
+      <div class="matrix-toolbar">
+        <div class="matrix-title-group">
+          <span class="matrix-title">Role × Role Compatibility Grid</span>
+          <span class="matrix-subtitle">13 roles · 78 unique pairs · Click cell to inspect</span>
+        </div>
+        <div class="legend" role="list" aria-label="Cell key">
+          <div class="legend-item" role="listitem">
+            <div class="legend-swatch prohibited" aria-hidden="true">✕</div>
+            Prohibited
+          </div>
+          <div class="legend-item" role="listitem">
+            <div class="legend-swatch mitigated" aria-hidden="true">!</div>
+            Mitigating Control
+          </div>
+          <div class="legend-item" role="listitem">
+            <div class="legend-swatch compatible" aria-hidden="true">✓</div>
+            Compatible
+          </div>
+          <div class="legend-item" role="listitem">
+            <div class="legend-swatch na" aria-hidden="true">—</div>
+            N/A
+          </div>
+        </div>
+      </div>
+
+      <div class="matrix-wrap" role="region" aria-label="SoD matrix table, horizontally scrollable">
+        <table class="matrix-table" id="sodMatrix" aria-label="Separation of Duties conflict matrix">
+          <!-- Populated by JS -->
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 2: ROLE RISK SCORER ═══ -->
+  <section aria-labelledby="scorer-heading" style="margin-bottom: 28px;">
+    <div class="section-header">
+      <p class="section-eyebrow">Section 02 — Access Combination Analysis</p>
+      <h2 class="section-title" id="scorer-heading">Identify an Access Combination</h2>
+      <p class="section-desc">Select one or more roles to simulate a user's access profile. The risk dashboard updates in real time, showing conflicts, required compensating controls, and IGA platform actions.</p>
+    </div>
+
+    <div class="scorer-section">
+      <div class="scorer-toolbar">
+        <span class="matrix-title">Role Risk Scorer</span>
+      </div>
+      <div class="scorer-grid">
+        <!-- Left: role checklist -->
+        <div class="role-picker" role="group" aria-labelledby="picker-label">
+          <span class="role-picker-label" id="picker-label">Select Roles</span>
+          <div class="role-check-list" id="roleChecklist">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Right: live dashboard -->
+        <div class="risk-dashboard" id="riskDashboard" aria-live="polite" aria-atomic="true">
+          <div class="empty-state" id="emptyState">
+            <div class="empty-state-icon">⬡</div>
+            <p class="empty-state-text">Select at least two roles to evaluate their combined access risk.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 3: STATS ═══ -->
+  <section aria-labelledby="stats-heading">
+    <div class="section-header">
+      <p class="section-eyebrow">Section 03 — Governance Summary</p>
+      <h2 class="section-title" id="stats-heading">Conflict Summary Statistics</h2>
+      <p class="section-desc">Program-level metrics for this SoD rule set. Reviewed quarterly by the IAM Governance Team.</p>
+    </div>
+
+    <div class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-card-eyebrow">Total Role Pairs</span>
+          <span class="stat-card-number navy">78</span>
+          <span class="stat-card-sub">Unique combinations evaluated</span>
+          <span class="stat-card-pct navy">13 roles</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-eyebrow">Prohibited Pairs</span>
+          <span class="stat-card-number red">12</span>
+          <span class="stat-card-sub">Hard block — auto-revoke in IGA</span>
+          <span class="stat-card-pct red">15% of pairs</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-eyebrow">Mitigating Control</span>
+          <span class="stat-card-number amber">18</span>
+          <span class="stat-card-sub">Allowed with compensating controls</span>
+          <span class="stat-card-pct amber">23% of pairs</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-eyebrow">Clean Pairs</span>
+          <span class="stat-card-number green">48</span>
+          <span class="stat-card-sub">No conflict detected</span>
+          <span class="stat-card-pct green">62% of pairs</span>
+        </div>
+      </div>
+
+      <div class="governance-footer">
+        <div class="gov-meta-group">
+          <div class="gov-meta-item">
+            <span class="gov-meta-label">Last Reviewed</span>
+            <span class="gov-meta-value">Q1 2024</span>
+          </div>
+          <div class="gov-meta-item">
+            <span class="gov-meta-label">Next Review</span>
+            <span class="gov-meta-value">Q3 2024</span>
+          </div>
+          <div class="gov-meta-item">
+            <span class="gov-meta-label">Framework</span>
+            <span class="gov-meta-value">NIST 800-53 r5 · SOX · COSO 2013</span>
+          </div>
+          <div class="gov-meta-item">
+            <span class="gov-meta-label">Version</span>
+            <span class="gov-meta-value">v4.2.1</span>
+          </div>
+        </div>
+        <div class="gov-owner">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <circle cx="7" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M2 12c0-2.761 2.239-5 5-5s5 2.239 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          IAM Governance Team
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalConflictName">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-status-row">
+          <span class="modal-status-badge" id="modalBadge"></span>
+          <span class="modal-risk-type" id="modalRiskType"></span>
+        </div>
+        <h3 class="modal-conflict-name" id="modalConflictName"></h3>
+        <span class="modal-roles" id="modalRoles"></span>
+      </div>
+      <button class="modal-close" id="modalClose" aria-label="Close detail panel">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody">
+    </div>
+  </div>
+</div>
+
+<script>
+/* ─── Data ─── */
+const ROLES = [
+  { id: 'AP',  name: 'AP Processor',          full: 'Accounts Payable Processor' },
+  { id: 'AR',  name: 'AR Specialist',          full: 'Accounts Receivable Specialist' },
+  { id: 'GL',  name: 'GL Accountant',          full: 'General Ledger Accountant' },
+  { id: 'BM',  name: 'Budget Manager',         full: 'Budget Manager' },
+  { id: 'PA',  name: 'Payroll Admin',          full: 'Payroll Administrator' },
+  { id: 'SA',  name: 'System Admin',           full: 'System Administrator' },
+  { id: 'AU',  name: 'Audit Reviewer',         full: 'Audit Reviewer' },
+  { id: 'VM',  name: 'Vendor Master Admin',    full: 'Vendor Master Administrator' },
+  { id: 'PO',  name: 'PO Approver',            full: 'Purchase Order Approver' },
+  { id: 'TR',  name: 'Treasury Analyst',       full: 'Treasury Analyst' },
+  { id: 'IS',  name: 'IT Security Analyst',    full: 'IT Security Analyst' },
+  { id: 'DB',  name: 'Database Admin',         full: 'Database Administrator' },
+  { id: 'AO',  name: 'Application Owner',      full: 'Application Owner' },
+];
+
+// keyed by sorted pair e.g. "AP:AR"
+const CONFLICTS = {
+  'AP:AR': {
+    status: 'prohibited',
+    name: 'Circular Payment Fraud',
+    riskType: 'Fraud / Financial Integrity',
+    controls: ['AC-2', 'AC-5', 'AC-6', 'AU-9', 'SI-12'],
+    scenario: 'A user holding both AP and AR roles can generate fictitious invoices in AP, process the outbound payment, then record the inbound receipt in AR — completing a full circular payment cycle that nets funds to an external account while books appear balanced. This pattern was central to several high-profile municipal fraud cases exceeding $5M.',
+    remediation: 'Revoke AP Processor access. If dual coverage is required, assign a secondary user under a segregated AR queue with independent supervisor approval. Implement daily cash reconciliation against bank statement.',
+    compensating: null,
+  },
+  'AP:VM': {
+    status: 'prohibited',
+    name: 'Ghost Vendor Scheme',
+    riskType: 'Fraud / Vendor Integrity',
+    controls: ['AC-2', 'AC-5', 'AC-6', 'AU-2', 'AU-6'],
+    scenario: 'The combination of Vendor Master Admin and AP Processor is the textbook ghost vendor scheme: the user creates a fictitious vendor (or alters bank details on an existing one) in the master file, then raises and approves invoices against that vendor, directing payment to a controlled account. Average loss per incident in retail/manufacturing: $1.7M (ACFE 2024).',
+    remediation: 'Vendor Master Admin must never be assigned to anyone in the AP workflow chain. All vendor creation/modification events must trigger a 4-eye review by Treasury and Procurement, independent of AP.',
+    compensating: null,
+  },
+  'AP:PO': {
+    status: 'prohibited',
+    name: 'Self-Approval of Disbursements',
+    riskType: 'Fraud / SOX Compliance',
+    controls: ['AC-5', 'AC-6', 'AU-2', 'CM-3', 'SA-9'],
+    scenario: 'When the same person can raise a Purchase Order and then process the corresponding AP payment, every financial control in the procure-to-pay cycle collapses. The user can fabricate a legitimate-looking PO for goods or services never received, then release the payment without a second authorizer. A direct SOX Section 404 violation.',
+    remediation: 'Revoke PO Approver from any user in the AP function. Enforce system-level 3-way matching (PO → Goods Receipt → Invoice) with the approver chain enforced in ERP role configuration.',
+    compensating: null,
+  },
+  'GL:AU': {
+    status: 'prohibited',
+    name: 'Self-Audit of Journal Entries',
+    riskType: 'Audit Integrity / SOX',
+    controls: ['AC-6', 'AU-2', 'AU-9', 'AU-12', 'CA-7'],
+    scenario: 'A GL Accountant who also holds the Audit Reviewer role can post manipulative or corrective journal entries and then certify their own work as compliant during the internal audit. This is a direct impairment of auditor independence per PCAOB AS 2201 and COSO Principle 10. It renders the audit control ineffective and constitutes a material weakness under SOX 302/404.',
+    remediation: 'Audit Reviewer must be assigned exclusively to personnel outside the financial reporting function. No one in the record-to-report process chain (GL, AP, AR, Payroll) should hold any audit access role.',
+    compensating: null,
+  },
+  'SA:AU': {
+    status: 'prohibited',
+    name: 'Cover-Track Access',
+    riskType: 'Audit Integrity / IT Risk',
+    controls: ['AC-2', 'AC-6', 'AU-2', 'AU-9', 'AU-10', 'SI-7'],
+    scenario: 'A System Admin with Audit Reviewer access can clear or alter system audit logs, disable logging for specific operations, or export and manipulate event records before an auditor review — effectively laundering any unauthorized activity. This is a critical IT General Control (ITGC) failure that would result in a qualified audit opinion.',
+    remediation: 'Audit log infrastructure must be controlled exclusively by a separate Security or Audit team with read-only access for system admins. Implement tamper-evident, write-once log storage with integrity hashing independent of the SA access domain.',
+    compensating: null,
+  },
+  'PA:BM': {
+    status: 'mitigated',
+    name: 'Payroll Budget Manipulation',
+    riskType: 'Fraud Risk / Financial Reporting',
+    controls: ['AC-5', 'AC-6', 'AU-6', 'CA-7'],
+    scenario: 'A user with both Payroll Admin and Budget Manager access can inflate headcount budgets and then add fictitious or unauthorized salary lines, collecting against budget allocations that appear pre-approved. Risk is elevated at period-end when budget managers often need payroll run data.',
+    remediation: null,
+    compensating: 'Quarterly independent payroll-to-budget reconciliation by Finance Controller. All headcount budget changes must be co-approved by HR Director. Automated alert on any payroll-to-budget variance >2% within a period.',
+  },
+  'DB:AO': {
+    status: 'mitigated',
+    name: 'Unauthorized Schema & Config Change',
+    riskType: 'Data Integrity / Change Risk',
+    controls: ['CM-3', 'CM-5', 'AC-6', 'SA-10'],
+    scenario: 'Database Admins can modify underlying data stores and schemas; Application Owners can deploy and configure application-tier changes. Combined, they can make and conceal application-level changes that bypass the normal change approval process, potentially altering business logic, prices, or access rules without a trail.',
+    remediation: null,
+    compensating: 'All changes by either role require Change Control Board (CCB) ticket with separate approver. DB schema changes trigger automated diff log reviewed by Architecture team. Application deployments require dual sign-off from DBA and Release Manager who are different individuals.',
+  },
+  'BM:PO': {
+    status: 'mitigated',
+    name: 'Budget-Backed Self-Authorization',
+    riskType: 'Fraud / Procurement Control',
+    controls: ['AC-5', 'AC-6', 'AU-2', 'SA-9'],
+    scenario: 'A Budget Manager who can also approve Purchase Orders can shift budget to a cost center, then issue and approve POs against that budget without a second authorizer. The risk is spending outside sanctioned purposes while appearing to be within approved budget.',
+    remediation: null,
+    compensating: 'VP-level countersignature required for any PO where the approver is also the budget owner for that cost center. Spend analytics tool must flag same-user BM+PO events for weekly Finance review.',
+  },
+};
+
+// Build symmetric lookup
+function getConflict(idA, idB) {
+  if (idA === idB) return null;
+  const key1 = `${idA}:${idB}`;
+  const key2 = `${idB}:${idA}`;
+  return CONFLICTS[key1] || CONFLICTS[key2] || { status: 'compatible' };
+}
+
+/* ─── Build Matrix Table ─── */
+function buildMatrix() {
+  const table = document.getElementById('sodMatrix');
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+
+  // Corner cell
+  const cornerTh = document.createElement('th');
+  cornerTh.setAttribute('scope', 'col');
+  cornerTh.textContent = 'Role ↓ / →';
+  headerRow.appendChild(cornerTh);
+
+  ROLES.forEach((role, ci) => {
+    const th = document.createElement('th');
+    th.setAttribute('scope', 'col');
+    th.innerHTML = `<div class="col-header-inner" title="${role.full}"><span class="col-abbr">${role.id}</span><span class="col-num">${String(ci+1).padStart(2,'0')}</span></div>`;
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+
+  ROLES.forEach((rowRole, ri) => {
+    const tr = document.createElement('tr');
+
+    // Row header
+    const rowTh = document.createElement('td');
+    rowTh.innerHTML = `<div class="row-header"><span class="row-name">${rowRole.name}</span><span class="row-abbr">${rowRole.id}</span></div>`;
+    tr.appendChild(rowTh);
+
+    ROLES.forEach((colRole, ci) => {
+      const td = document.createElement('td');
+      td.className = 'cell';
+
+      if (ri === ci) {
+        td.innerHTML = `<div class="cell-inner na" aria-label="Same role — N/A"><span class="cell-icon" aria-hidden="true">—</span></div>`;
+      } else {
+        const conflict = getConflict(rowRole.id, colRole.id);
+        const status = conflict ? conflict.status : 'compatible';
+        let icon, label;
+
+        if (status === 'prohibited')  { icon = '✕'; label = `Prohibited: ${rowRole.name} + ${colRole.name}`; }
+        else if (status === 'mitigated')  { icon = '!'; label = `Mitigating control required: ${rowRole.name} + ${colRole.name}`; }
+        else { icon = '✓'; label = `Compatible: ${rowRole.name} + ${colRole.name}`; }
+
+        const clickable = status !== 'compatible' ? ` tabindex="0" role="button"` : '';
+        td.innerHTML = `<div class="cell-inner ${status}" aria-label="${label}"${clickable} data-row="${rowRole.id}" data-col="${colRole.id}"><span class="cell-icon" aria-hidden="true">${icon}</span></div>`;
+      }
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
+
+  table.appendChild(tbody);
+
+  // Event delegation
+  table.addEventListener('click', (e) => {
+    const cell = e.target.closest('.cell-inner');
+    if (!cell || cell.classList.contains('na') || cell.classList.contains('compatible')) return;
+    openModal(cell.dataset.row, cell.dataset.col);
+  });
+
+  table.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const cell = e.target.closest('.cell-inner');
+    if (!cell || cell.classList.contains('na') || cell.classList.contains('compatible')) return;
+    e.preventDefault();
+    openModal(cell.dataset.row, cell.dataset.col);
+  });
+}
+
+/* ─── Modal ─── */
+const overlay = document.getElementById('modalOverlay');
+const modalClose = document.getElementById('modalClose');
+let lastFocused = null;
+
+function openModal(rowId, colId) {
+  lastFocused = document.activeElement;
+  const conflict = getConflict(rowId, colId);
+  if (!conflict || conflict.status === 'compatible') return;
+
+  const rowRole = ROLES.find(r => r.id === rowId);
+  const colRole = ROLES.find(r => r.id === colId);
+
+  // Badge
+  const badge = document.getElementById('modalBadge');
+  badge.className = `modal-status-badge ${conflict.status}`;
+  if (conflict.status === 'prohibited') badge.textContent = '✕ Prohibited';
+  else badge.textContent = '! Mitigating Control';
+
+  document.getElementById('modalRiskType').textContent = conflict.riskType;
+  document.getElementById('modalConflictName').textContent = conflict.name;
+  document.getElementById('modalRoles').textContent = `${rowRole.full}  ×  ${colRole.full}`;
+
+  // Build body
+  const body = document.getElementById('modalBody');
+  body.innerHTML = '';
+
+  // Scenario block
+  const scenarioBlock = document.createElement('div');
+  scenarioBlock.className = 'modal-block';
+  const scenarioClass = conflict.status === 'prohibited' ? 'fraud-scenario' : 'mitigated-scenario';
+  scenarioBlock.innerHTML = `
+    <span class="modal-block-label">Risk Scenario</span>
+    <div class="${scenarioClass}">${conflict.scenario}</div>
+  `;
+  body.appendChild(scenarioBlock);
+
+  // NIST Controls
+  const controlsBlock = document.createElement('div');
+  controlsBlock.className = 'modal-block';
+  const tags = conflict.controls.map(c => `<span class="control-tag">NIST ${c}</span>`).join('');
+  controlsBlock.innerHTML = `
+    <span class="modal-block-label">Violated Controls (NIST 800-53 r5)</span>
+    <div class="control-tag-row">${tags}</div>
+  `;
+  body.appendChild(controlsBlock);
+
+  // Remediation or compensating control
+  const remLabel = conflict.status === 'prohibited' ? 'Remediation' : 'Required Compensating Control';
+  const remContent = conflict.status === 'prohibited' ? conflict.remediation : conflict.compensating;
+  const remBlock = document.createElement('div');
+  remBlock.className = 'modal-block';
+  remBlock.innerHTML = `
+    <span class="modal-block-label">${remLabel}</span>
+    <div class="remediation-box">${remContent}</div>
+  `;
+  body.appendChild(remBlock);
+
+  // IGA Action
+  const igaBlock = document.createElement('div');
+  igaBlock.className = 'modal-block';
+  let igaText;
+  if (conflict.status === 'prohibited') {
+    igaText = `<strong>Auto-Revoke:</strong> IGA platform will immediately trigger role revocation workflow upon detection of this combination. Access Request for either role will be blocked while the other is held. A Provisioning Violation ticket is raised to the user's manager.`;
+  } else {
+    igaText = `<strong>Approval Workflow:</strong> Access request is routed to the Access Review board. User must submit a compensating control attestation before access is granted. Quarterly access re-certification is required while this combination is held.`;
+  }
+  igaBlock.innerHTML = `
+    <span class="modal-block-label">IGA Platform Action</span>
+    <div class="remediation-box">${igaText}</div>
+  `;
+  body.appendChild(igaBlock);
+
+  overlay.classList.add('open');
+  setTimeout(() => { modalClose.focus(); }, 60);
+}
+
+function closeModal() {
+  overlay.classList.remove('open');
+  if (lastFocused) lastFocused.focus();
+}
+
+modalClose.addEventListener('click', closeModal);
+overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+/* ─── Role Checker ─── */
+let selectedRoles = new Set();
+
+function buildRoleChecklist() {
+  const container = document.getElementById('roleChecklist');
+  ROLES.forEach(role => {
+    const item = document.createElement('label');
+    item.className = 'role-check-item';
+    item.innerHTML = `
+      <input type="checkbox" value="${role.id}" aria-label="${role.full}">
+      <div>
+        <div class="role-check-name">${role.name}</div>
+        <div class="role-check-abbr">${role.id} — ${role.full}</div>
+      </div>
+    `;
+    const cb = item.querySelector('input');
+    cb.addEventListener('change', () => {
+      if (cb.checked) { selectedRoles.add(role.id); item.classList.add('selected'); }
+      else            { selectedRoles.delete(role.id); item.classList.remove('selected'); }
+      updateDashboard();
+    });
+    container.appendChild(item);
+  });
+}
+
+function getRiskScore(prohibited, mitigated, total) {
+  if (total === 0) return 0;
+  const pScore = (prohibited / total) * 80;
+  const mScore = (mitigated / total) * 40;
+  return Math.min(100, Math.round(pScore + mScore));
+}
+
+function getRiskLevel(score) {
+  if (score === 0) return 'low';
+  if (score < 40) return 'low';
+  if (score < 70) return 'medium';
+  return 'high';
+}
+
+function getRiskLabel(score) {
+  if (score === 0) return 'No Risk';
+  if (score < 40) return 'Low Risk';
+  if (score < 70) return 'Medium Risk';
+  return 'High Risk';
+}
+
+function updateDashboard() {
+  const dashboard = document.getElementById('riskDashboard');
+  const roles = Array.from(selectedRoles);
+
+  if (roles.length < 2) {
+    dashboard.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">⬡</div>
+        <p class="empty-state-text">Select at least two roles to evaluate their combined access risk.</p>
+      </div>`;
+    return;
+  }
+
+  // Evaluate all pairs
+  const prohibited = [], mitigated = [], safe = [];
+
+  for (let i = 0; i < roles.length; i++) {
+    for (let j = i + 1; j < roles.length; j++) {
+      const a = roles[i], b = roles[j];
+      const conflict = getConflict(a, b);
+      const roleA = ROLES.find(r => r.id === a);
+      const roleB = ROLES.find(r => r.id === b);
+      const pairName = `${roleA.name} + ${roleB.name}`;
+
+      if (!conflict || conflict.status === 'compatible') {
+        safe.push({ name: pairName, conflict });
+      } else if (conflict.status === 'prohibited') {
+        prohibited.push({ name: pairName, conflict });
+      } else if (conflict.status === 'mitigated') {
+        mitigated.push({ name: pairName, conflict });
+      }
+    }
+  }
+
+  const totalPairs = prohibited.length + mitigated.length + safe.length;
+  const score = getRiskScore(prohibited.length, mitigated.length, totalPairs);
+  const level = getRiskLevel(score);
+  const levelLabel = getRiskLabel(score);
+
+  let html = `
+    <div class="risk-score-row">
+      <div class="risk-score-display">
+        <span class="risk-score-number ${level}">${score}</span>
+        <span class="risk-score-label">Risk Score /100</span>
+      </div>
+      <div class="risk-meter-wrap">
+        <span class="risk-level-badge ${level}">${levelLabel}</span>
+        <div class="risk-meter-track" role="progressbar" aria-valuenow="${score}" aria-valuemin="0" aria-valuemax="100" aria-label="Risk score ${score} out of 100">
+          <div class="risk-meter-fill ${level}" style="width: ${score}%"></div>
+        </div>
+        <div class="risk-meter-ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+      </div>
+    </div>`;
+
+  if (prohibited.length > 0) {
+    html += `<div class="conflict-group">
+      <div class="conflict-group-header">
+        <span>Prohibited Combinations</span>
+        <span class="badge-count red">${prohibited.length}</span>
+      </div>`;
+    prohibited.forEach(p => {
+      html += `<div class="conflict-item prohibited-item">
+        <span class="conflict-item-title">${p.conflict.name}</span>
+        <span class="conflict-item-sub">${p.name}</span>
+        <span class="conflict-item-action">▶ IGA: Auto-Revoke · Provisioning ticket raised</span>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  if (mitigated.length > 0) {
+    html += `<div class="conflict-group">
+      <div class="conflict-group-header">
+        <span>Mitigating Controls Required</span>
+        <span class="badge-count amber">${mitigated.length}</span>
+      </div>`;
+    mitigated.forEach(m => {
+      const shortControl = m.conflict.compensating
+        ? m.conflict.compensating.substring(0, 100) + (m.conflict.compensating.length > 100 ? '…' : '')
+        : '';
+      html += `<div class="conflict-item mitigated-item">
+        <span class="conflict-item-title">${m.conflict.name}</span>
+        <span class="conflict-item-sub">${m.name}</span>
+        <span class="conflict-item-sub">${shortControl}</span>
+        <span class="conflict-item-action">▶ IGA: Approval workflow · Quarterly re-cert</span>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  if (safe.length > 0) {
+    html += `<div class="conflict-group">
+      <div class="conflict-group-header">
+        <span>Compatible Pairs</span>
+        <span class="badge-count green">${safe.length}</span>
+      </div>`;
+    const showSafe = safe.slice(0, 4);
+    showSafe.forEach(s => {
+      html += `<div class="conflict-item safe-item">
+        <span class="conflict-item-title">${s.name}</span>
+        <span class="conflict-item-action">▶ IGA: Pass — no action required</span>
+      </div>`;
+    });
+    if (safe.length > 4) {
+      html += `<div class="conflict-item safe-item">
+        <span class="conflict-item-title" style="color:var(--text-muted)">+ ${safe.length - 4} more compatible pairs</span>
+        <span class="conflict-item-action">▶ IGA: Pass — no action required</span>
+      </div>`;
+    }
+    html += `</div>`;
+  }
+
+  // IGA summary
+  const igaAutoRevoke = prohibited.length;
+  const igaWorkflow = mitigated.length;
+  const igaPass = safe.length;
+  html += `
+    <div class="iga-section">
+      <span class="iga-section-label">IGA Platform Actions Summary</span>
+      <div class="iga-row">
+        <div class="iga-indicator red"></div>
+        <span class="iga-row-text"><strong>Auto-Revoke (${igaAutoRevoke}):</strong> ${igaAutoRevoke > 0 ? `${igaAutoRevoke} combination${igaAutoRevoke > 1 ? 's' : ''} would trigger immediate access revocation and a Provisioning Violation ticket to the user's manager and CISO.` : 'None — no hard-block conflicts in this combination.'}</span>
+      </div>
+      <div class="iga-row">
+        <div class="iga-indicator amber"></div>
+        <span class="iga-row-text"><strong>Approval Workflow (${igaWorkflow}):</strong> ${igaWorkflow > 0 ? `${igaWorkflow} combination${igaWorkflow > 1 ? 's' : ''} require Access Review Board approval and compensating control attestation before provisioning.` : 'None — no mitigated conflicts in this combination.'}</span>
+      </div>
+      <div class="iga-row">
+        <div class="iga-indicator green"></div>
+        <span class="iga-row-text"><strong>Pass (${igaPass}):</strong> ${igaPass} pair${igaPass !== 1 ? 's' : ''} are compatible and require no IGA intervention.</span>
+      </div>
+    </div>`;
+
+  dashboard.innerHTML = html;
+}
+
+/* ─── Theme Toggle ─── */
+const themeToggle = document.getElementById('themeToggle');
+let currentTheme = null;
+
+themeToggle.addEventListener('click', () => {
+  const root = document.documentElement;
+  if (!currentTheme) {
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    currentTheme = systemDark ? 'dark' : 'light';
+  }
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', currentTheme);
+  themeToggle.textContent = currentTheme === 'dark' ? '☀' : '☽';
+});
+
+/* ─── Init ─── */
+buildMatrix();
+buildRoleChecklist();
+</script>

@@ -1,0 +1,1376 @@
+<title>Meridian Financial — IAM Readiness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap">
+
+<style>
+/* ─── Design tokens ──────────────────────────────────────────────── */
+:root {
+  --bg:           #F4F6F9;
+  --surface:      #FFFFFF;
+  --surface-2:    #EEF1F6;
+  --border:       #D8DEE8;
+  --border-light: #E8ECF2;
+  --text:         #131E2E;
+  --text-mid:     #3B4A5E;
+  --text-muted:   #6B7A90;
+  --navy:         #0D1F3C;
+  --navy-mid:     #1A3260;
+  --navy-dim:     #243856;
+
+  --emerald:        #059669;
+  --emerald-bg:     #D1FAE5;
+  --emerald-border: #A7F3D0;
+  --emerald-dim:    #34D399;
+
+  --amber:        #B45309;
+  --amber-bg:     #FEF3C7;
+  --amber-border: #FDE68A;
+  --amber-bar:    #F59E0B;
+
+  --red:        #B91C1C;
+  --red-bg:     #FEE2E2;
+  --red-border: #FECACA;
+  --red-bar:    #EF4444;
+
+  --score-amber: #D97706;
+
+  --radius-sm:  3px;
+  --radius:     5px;
+  --radius-lg:  8px;
+
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+  --sans: 'IBM Plex Sans', system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:           #0A1422;
+    --surface:      #111C2E;
+    --surface-2:    #162035;
+    --border:       #1E3050;
+    --border-light: #1A2840;
+    --text:         #E2E8F3;
+    --text-mid:     #A8B8CC;
+    --text-muted:   #637082;
+    --navy:         #0D1F3C;
+    --navy-mid:     #122845;
+    --navy-dim:     #1A3260;
+
+    --emerald:        #10B981;
+    --emerald-bg:     #052E16;
+    --emerald-border: #064E3B;
+    --emerald-dim:    #34D399;
+
+    --amber:        #F59E0B;
+    --amber-bg:     #1C1200;
+    --amber-border: #78350F;
+    --amber-bar:    #F59E0B;
+
+    --red:        #EF4444;
+    --red-bg:     #1C0000;
+    --red-border: #7F1D1D;
+    --red-bar:    #EF4444;
+
+    --score-amber: #F59E0B;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg:           #0A1422;
+  --surface:      #111C2E;
+  --surface-2:    #162035;
+  --border:       #1E3050;
+  --border-light: #1A2840;
+  --text:         #E2E8F3;
+  --text-mid:     #A8B8CC;
+  --text-muted:   #637082;
+  --navy:         #0D1F3C;
+  --navy-mid:     #122845;
+  --navy-dim:     #1A3260;
+
+  --emerald:        #10B981;
+  --emerald-bg:     #052E16;
+  --emerald-border: #064E3B;
+  --emerald-dim:    #34D399;
+
+  --amber:        #F59E0B;
+  --amber-bg:     #1C1200;
+  --amber-border: #78350F;
+  --amber-bar:    #F59E0B;
+
+  --red:        #EF4444;
+  --red-bg:     #1C0000;
+  --red-border: #7F1D1D;
+  --red-bar:    #EF4444;
+
+  --score-amber: #F59E0B;
+}
+
+/* ─── Reset & base ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+h1, h2, h3, h4, h5, h6 { margin: 0; font-weight: 600; text-wrap: balance; }
+p { margin: 0; }
+a { color: var(--emerald); }
+
+/* ─── Layout shell ───────────────────────────────────────────────── */
+.page-header {
+  background: var(--navy);
+  color: #fff;
+  padding: 0;
+}
+
+.header-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.header-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7A9ABF;
+  font-weight: 500;
+}
+
+.header-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.header-sub {
+  font-size: 13.5px;
+  color: #8AAAC8;
+  font-weight: 400;
+}
+
+.header-meta {
+  margin-top: 10px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #6A8BAD;
+}
+
+.meta-item strong {
+  color: #96B8D8;
+  font-weight: 500;
+}
+
+.main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 28px 28px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ─── Score summary card ─────────────────────────────────────────── */
+.score-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--amber-bar);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.score-card-top {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.score-main {
+  padding: 28px 32px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-right: 1px solid var(--border-light);
+}
+
+.score-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.score-number {
+  font-family: var(--mono);
+  font-size: 64px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--score-amber);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.score-denom {
+  font-size: 28px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.score-verdict {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--amber);
+  margin-top: 4px;
+  letter-spacing: 0.01em;
+}
+
+.score-status {
+  padding: 20px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  width: fit-content;
+}
+
+.status-badge.conditional {
+  background: var(--amber-bg);
+  color: var(--amber);
+  border: 1px solid var(--amber-border);
+}
+
+.status-desc {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.5;
+  max-width: 380px;
+}
+
+/* ─── Dimension bars ─────────────────────────────────────────────── */
+.score-dims {
+  padding: 22px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dim-row {
+  display: grid;
+  grid-template-columns: 190px 1fr 48px;
+  align-items: center;
+  gap: 14px;
+}
+
+.dim-label {
+  font-size: 12.5px;
+  color: var(--text-mid);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.dim-track {
+  background: var(--surface-2);
+  border-radius: 2px;
+  height: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dim-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dim-fill.green  { background: var(--emerald); }
+.dim-fill.amber  { background: var(--amber-bar); }
+.dim-fill.red    { background: var(--red-bar); }
+.dim-fill.lime   { background: #84CC16; }
+
+.dim-score {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.dim-score.green { color: var(--emerald); }
+.dim-score.amber { color: var(--amber); }
+.dim-score.lime  { color: #65A30D; }
+
+/* ─── Accordion sections ─────────────────────────────────────────── */
+.sections-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 500;
+  padding: 0 2px;
+}
+
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.acc-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.acc-trigger {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  color: var(--text);
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.acc-trigger:hover {
+  background: var(--surface-2);
+}
+
+.acc-trigger:focus-visible {
+  outline: 2px solid var(--emerald);
+  outline-offset: -2px;
+}
+
+.acc-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  flex-shrink: 0;
+  width: 20px;
+}
+
+.acc-title {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.acc-score {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.acc-score.green { color: var(--emerald); }
+.acc-score.amber { color: var(--amber); }
+
+.acc-chevron {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+
+.acc-item.open .acc-chevron {
+  transform: rotate(180deg);
+}
+
+.acc-body {
+  display: none;
+  border-top: 1px solid var(--border-light);
+  padding: 20px 20px 20px 20px;
+}
+
+.acc-item.open .acc-body {
+  display: block;
+}
+
+/* ─── Checklist items ────────────────────────────────────────────── */
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.check-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+  align-items: start;
+}
+
+.check-item:last-child {
+  border-bottom: none;
+  padding-bottom: 4px;
+}
+
+.check-badge {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.check-badge.pass {
+  background: var(--emerald-bg);
+  color: var(--emerald);
+  border: 1px solid var(--emerald-border);
+}
+
+.check-badge.fail {
+  background: var(--red-bg);
+  color: var(--red);
+  border: 1px solid var(--red-border);
+}
+
+.check-badge.gap {
+  background: var(--amber-bg);
+  color: var(--amber);
+  border: 1px solid var(--amber-border);
+}
+
+.check-content {}
+
+.check-title {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.check-detail {
+  font-size: 12.5px;
+  color: var(--text-mid);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.check-action {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 5px;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.check-action strong {
+  color: var(--amber);
+  font-style: normal;
+  font-weight: 500;
+}
+
+.check-action.red strong {
+  color: var(--red);
+}
+
+.section-finding {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border-left: 3px solid var(--navy-dim);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 12.5px;
+  color: var(--text-mid);
+  line-height: 1.55;
+}
+
+.section-finding.critical {
+  border-left-color: var(--red-bar);
+  background: var(--red-bg);
+  color: var(--text);
+}
+
+/* ─── Gap table ──────────────────────────────────────────────────── */
+.gap-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.gap-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  min-width: 620px;
+}
+
+.gap-table thead {
+  background: var(--navy);
+  color: #98B4CC;
+}
+
+.gap-table thead th {
+  padding: 11px 14px;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.gap-table tbody tr {
+  border-bottom: 1px solid var(--border-light);
+  transition: background 0.1s;
+}
+
+.gap-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.gap-table tbody tr:hover {
+  background: var(--surface-2);
+}
+
+.gap-table tbody td {
+  padding: 11px 14px;
+  vertical-align: middle;
+  color: var(--text-mid);
+  line-height: 1.4;
+}
+
+.gap-table .td-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.gap-table .td-section {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.gap-table .td-gap {
+  color: var(--text);
+  font-size: 12.5px;
+  max-width: 280px;
+}
+
+.gap-table .td-owner {
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.gap-table .td-date {
+  font-family: var(--mono);
+  font-size: 11px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.sev-badge {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+.sev-badge.critical {
+  background: var(--red-bg);
+  color: var(--red);
+  border: 1px solid var(--red-border);
+}
+
+.sev-badge.high {
+  background: var(--amber-bg);
+  color: var(--amber);
+  border: 1px solid var(--amber-border);
+}
+
+.sev-badge.medium {
+  background: var(--surface-2);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+/* ─── Recommendation panel ───────────────────────────────────────── */
+.rec-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--red-bar);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.rec-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.rec-eyebrow {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.rec-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--red);
+  line-height: 1.3;
+}
+
+.rec-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.priority-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.priority-item {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.priority-n {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 1px;
+}
+
+.priority-text {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.4;
+}
+
+.priority-text strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.priority-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.timeline-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+  padding-top: 4px;
+  border-top: 1px solid var(--border-light);
+}
+
+.timeline-block {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.timeline-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.timeline-value {
+  font-size: 13.5px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.timeline-value.amber { color: var(--amber); }
+
+.rec-footer {
+  padding: 14px 24px;
+  background: var(--surface-2);
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+}
+
+.rec-footer-item {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.rec-footer-item strong {
+  color: var(--text-mid);
+  font-weight: 500;
+}
+
+/* ─── Shared section header ──────────────────────────────────────── */
+.section-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.section-h {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 680px) {
+  .header-inner { padding: 22px 18px 20px; }
+  .main { padding: 18px 16px 48px; }
+  .score-card-top { grid-template-columns: 1fr; }
+  .score-main { border-right: none; border-bottom: 1px solid var(--border-light); }
+  .dim-row { grid-template-columns: 140px 1fr 44px; }
+  .header-meta { gap: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dim-fill { transition: none; }
+  .acc-chevron { transition: none; }
+}
+</style>
+
+<!-- ─── PAGE HEADER ──────────────────────────────────────────────── -->
+<div class="page-header">
+  <div class="header-inner">
+    <span class="header-eyebrow">PAM · Enterprise IAM Integration · Application Onboarding</span>
+    <h1 class="header-title">IAM Application Onboarding Readiness Assessment</h1>
+    <p class="header-sub">Meridian Financial Platform &nbsp;·&nbsp; Assessment Date: March 12, 2025</p>
+    <div class="header-meta">
+      <span class="meta-item"><strong>Assessor:</strong> Janaya Hoskins</span>
+      <span class="meta-item"><strong>Population:</strong> 3,200 identities</span>
+      <span class="meta-item"><strong>Classification:</strong> Controlled Unclassified — Financial PII</span>
+      <span class="meta-item"><strong>Framework:</strong> FISMA Moderate · NIST 800-53 r5</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MAIN CONTENT ────────────────────────────────────────────── -->
+<div class="main">
+
+  <!-- Score Summary -->
+  <div class="score-card">
+    <div class="score-card-top">
+      <div class="score-main">
+        <span class="score-label">Overall Readiness Score</span>
+        <div class="score-number">69<span class="score-denom">/100</span></div>
+        <div class="score-verdict">Conditional Readiness</div>
+      </div>
+      <div class="score-status">
+        <div class="status-badge conditional">⚠ Conditional — Remediation Required</div>
+        <p class="status-desc">6 open gaps must be closed before production authorization. Critical dependency: CyberArk vault integration not yet configured — privileged accounts are unmanaged and cannot be onboarded without PAM coverage.</p>
+      </div>
+    </div>
+
+    <div class="score-dims">
+      <div class="dim-row">
+        <span class="dim-label">Authentication &amp; Federation</span>
+        <div class="dim-track"><div class="dim-fill amber" style="width:78%"></div></div>
+        <span class="dim-score amber">78/100</span>
+      </div>
+      <div class="dim-row">
+        <span class="dim-label">Privileged Access (CyberArk)</span>
+        <div class="dim-track"><div class="dim-fill red" style="width:52%"></div></div>
+        <span class="dim-score amber">52/100</span>
+      </div>
+      <div class="dim-row">
+        <span class="dim-label">RBAC &amp; Entitlement Structure</span>
+        <div class="dim-track"><div class="dim-fill amber" style="width:72%"></div></div>
+        <span class="dim-score amber">72/100</span>
+      </div>
+      <div class="dim-row">
+        <span class="dim-label">Identity Lifecycle &amp; Access Reviews</span>
+        <div class="dim-track"><div class="dim-fill amber" style="width:68%"></div></div>
+        <span class="dim-score amber">68/100</span>
+      </div>
+      <div class="dim-row">
+        <span class="dim-label">FISMA &amp; Compliance Readiness</span>
+        <div class="dim-track"><div class="dim-fill lime" style="width:76%"></div></div>
+        <span class="dim-score lime">76/100</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Accordion Sections -->
+  <div class="section-block">
+    <span class="sections-label">Assessment Sections</span>
+    <div class="accordion">
+
+      <!-- 1. Authentication & Federation -->
+      <div class="acc-item" id="acc-1">
+        <button class="acc-trigger" onclick="toggle('acc-1')" aria-expanded="false">
+          <span class="acc-num">01</span>
+          <span class="acc-title">Authentication &amp; Federation</span>
+          <span class="acc-score amber">78/100</span>
+          <svg class="acc-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="checklist">
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">Entra ID (Azure AD) SSO integration: SAML 2.0 service principal configured and validated in UAT</div>
+                <div class="check-detail">Authentication routes through agency Entra ID tenant. Conditional Access policy enforced at login.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">MFA enforcement: Conditional Access requires phishing-resistant MFA for all users</div>
+                <div class="check-detail">Authenticator app + FIDO2 hardware key both accepted. SMS OTP excluded per agency policy.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge gap">Gap</span>
+              <div class="check-content">
+                <div class="check-title">PIV/CAC smartcard authentication: Not yet supported by application</div>
+                <div class="check-detail">HSPD-12 requires PIV enforcement for federal systems at FISMA Moderate and above. Application does not currently accept smartcard authentication.</div>
+                <div class="check-action"><strong>Action:</strong> Application vendor to implement PIV/CAC via SAML assertion or certificate-based auth. Required before production ATO.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">Session timeout policy: Idle timeout set to 15 minutes per NIST 800-53 AC-11</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">Authoritative identity source: SSA HR Connect feeds Entra ID via SCIM provisioning. Employee ID is primary correlation attribute.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">Termination workflow: HR separation event disables Entra ID account within 4 hours, blocking SSO access to all integrated applications including this system.</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-finding">
+            <strong>Finding:</strong> Federation and MFA baseline is strong. PIV/CAC gap is the blocking issue — FISMA Moderate requires smartcard authentication for federal employees, and this cannot be waived for production.
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Privileged Access Management (CyberArk) -->
+      <div class="acc-item" id="acc-2">
+        <button class="acc-trigger" onclick="toggle('acc-2')" aria-expanded="false">
+          <span class="acc-num">02</span>
+          <span class="acc-title">Privileged Access Management (CyberArk)</span>
+          <span class="acc-score amber">52/100</span>
+          <svg class="acc-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="checklist">
+
+            <div class="check-item">
+              <span class="check-badge fail">Fail</span>
+              <div class="check-content">
+                <div class="check-title">CyberArk vault integration not configured — privileged accounts not onboarded to PAM</div>
+                <div class="check-detail">System Administrator and Batch Processor accounts (47 total) have static credentials with no rotation. These accounts have direct database and admin console access and must be vaulted before production authorization.</div>
+                <div class="check-action red"><strong>Action:</strong> CyberArk onboarding is the critical path item. No production ATO possible with unmanaged privileged credentials. Target: vault integration configured and tested within 30 days.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge fail">Fail</span>
+              <div class="check-content">
+                <div class="check-title">Privileged session recording: Not enabled</div>
+                <div class="check-detail">NIST 800-53 AU-14 requires session recording for privileged access to federal systems. No session monitoring currently in place for admin-level activity.</div>
+                <div class="check-action red"><strong>Action:</strong> CyberArk PSM (Privileged Session Manager) must be configured alongside vault integration. Cannot be deferred.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge fail">Fail</span>
+              <div class="check-content">
+                <div class="check-title">Password rotation: Static credentials on all 47 privileged accounts — no automated rotation</div>
+                <div class="check-detail">Passwords have not been rotated in 180+ days per application admin disclosure. Several shared across environments (UAT/Prod).</div>
+                <div class="check-action red"><strong>Action:</strong> Immediate manual rotation required. Automated rotation policy configured in CyberArk CPM (Central Policy Manager) upon vault onboarding.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">Privileged accounts inventoried: 47 accounts identified — 12 System Administrators, 8 Batch Processors, 27 service/batch accounts</div>
+                <div class="check-detail">Full inventory provided by application owner. Scope defined for CyberArk onboarding.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge gap">Gap</span>
+              <div class="check-content">
+                <div class="check-title">Just-in-time access model: Not yet implemented for System Administrator role</div>
+                <div class="check-detail">Admins hold persistent admin access. Recommendation: JIT access via CyberArk on-demand provisioning — admin rights granted for session duration, revoked on logoff.</div>
+                <div class="check-action"><strong>Action:</strong> JIT model to be evaluated during CyberArk onboarding design phase. Not blocking, but required for hardening plan.</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-finding critical">
+            <strong>Critical finding:</strong> No CyberArk vault coverage = no production authorization. All three critical gaps in this section are blocking. Vault integration, session recording, and password rotation must be complete before this application can proceed.
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. RBAC & Entitlement Structure -->
+      <div class="acc-item" id="acc-3">
+        <button class="acc-trigger" onclick="toggle('acc-3')" aria-expanded="false">
+          <span class="acc-num">03</span>
+          <span class="acc-title">RBAC &amp; Entitlement Structure</span>
+          <span class="acc-score amber">72/100</span>
+          <svg class="acc-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="checklist">
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">Role catalog documented: 8 application roles defined with access scope</div>
+                <div class="check-detail">Finance Admin · Finance Analyst · Budget Viewer · Report Generator · Audit Read-Only · Batch Processor · System Administrator · Executive View</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">Least privilege principle applied to standard user roles: Finance Analyst, Budget Viewer, Report Generator scope-limited to read/report functions</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge gap">Gap</span>
+              <div class="check-content">
+                <div class="check-title">Role descriptions incomplete: 3 of 8 roles lack documented function and data scope</div>
+                <div class="check-detail">Audit Read-Only, Batch Processor, and Executive View have no formal role description. Required for access review documentation and ISSO sign-off.</div>
+                <div class="check-action"><strong>Action:</strong> Application owner to provide role descriptions and data access scope for remaining 3 roles within 14 days.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge gap">Gap</span>
+              <div class="check-content">
+                <div class="check-title">Role ownership: 5 of 8 roles have no designated business owner</div>
+                <div class="check-detail">Owner required for access review sign-off under NIST 800-53 AC-2. ISSO cannot serve as owner for all roles — business-side ownership is required.</div>
+                <div class="check-action"><strong>Action:</strong> Application owner to assign and document role owners before first access review cycle.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">SoD conflict identified and documented: Finance Admin + Audit Read-Only constitutes a conflict of interest per SOX and agency policy</div>
+                <div class="check-detail">Combination flagged. Mitigation: roles must not be assigned to the same individual. Access request process will enforce this restriction.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">No nested role hierarchy — flat role model confirmed by application owner</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-finding">
+            <strong>Finding:</strong> Role structure is sound. Gaps in documentation and ownership are administrative — they do not block vault integration but must be closed before the first access review cycle can be conducted.
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Identity Lifecycle & Access Reviews -->
+      <div class="acc-item" id="acc-4">
+        <button class="acc-trigger" onclick="toggle('acc-4')" aria-expanded="false">
+          <span class="acc-num">04</span>
+          <span class="acc-title">Identity Lifecycle &amp; Access Reviews</span>
+          <span class="acc-score amber">68/100</span>
+          <svg class="acc-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="checklist">
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">Onboarding process defined: New hire access provisioned via Entra ID group membership tied to role. Access request form routed to role owner for approval.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">Offboarding: Entra ID account disable propagates within 4 hours of HR separation event. SSO access blocked immediately.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge gap">Gap</span>
+              <div class="check-content">
+                <div class="check-title">Access review cycle: Annual review process not yet formally established for this application</div>
+                <div class="check-detail">NIST 800-53 AC-2(j) requires periodic access review. Frequency for FISMA Moderate: at minimum annually. Privileged accounts require semi-annual review.</div>
+                <div class="check-action"><strong>Action:</strong> ISSO to establish access review schedule, assign reviewers, and document process in System Security Plan within 30 days of authorization.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge gap">Gap</span>
+              <div class="check-content">
+                <div class="check-title">Service account lifecycle: 27 service/batch accounts have no defined review owner or recertification schedule</div>
+                <div class="check-detail">Service accounts are high-risk — persistent credentials, often over-permissioned. Without an owner, no one is accountable for validating continued business need.</div>
+                <div class="check-action"><strong>Action:</strong> ISSO to assign ownership and review schedule for all service accounts before production authorization.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">Transfer / role change process: RBAC group membership updated via ServiceNow ticket on internal transfer. Old role removed before new role granted.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge gap">Gap</span>
+              <div class="check-content">
+                <div class="check-title">Orphan account detection: No automated mechanism to identify accounts with no active Entra ID correlation</div>
+                <div class="check-detail">Manual reconciliation required until automated monitoring is established. Risk: terminated contractors or expired service accounts may retain access.</div>
+                <div class="check-action"><strong>Action:</strong> Establish quarterly manual reconciliation as interim control. Entra ID group sync will reduce orphan risk for standard users.</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-finding">
+            <strong>Finding:</strong> Onboarding and offboarding paths are defined. Gaps center on recurring review processes — these are not blocking for initial authorization but must be formalized in the SSP within 30 days of ATO.
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. FISMA & Compliance Readiness -->
+      <div class="acc-item" id="acc-5">
+        <button class="acc-trigger" onclick="toggle('acc-5')" aria-expanded="false">
+          <span class="acc-num">05</span>
+          <span class="acc-title">FISMA &amp; Compliance Readiness</span>
+          <span class="acc-score green">76/100</span>
+          <svg class="acc-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg>
+        </button>
+        <div class="acc-body">
+          <div class="checklist">
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">System categorization confirmed: FISMA Moderate (Confidentiality: Moderate, Integrity: Moderate, Availability: Low)</div>
+                <div class="check-detail">Categorization documented by ISSO per FIPS 199. Financial PII classification drives Confidentiality rating.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">ISSO assigned: Information System Security Officer designated and documented for this system</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge gap">Gap</span>
+              <div class="check-content">
+                <div class="check-title">System Security Plan (SSP): Draft exists but IAM-related controls incomplete</div>
+                <div class="check-detail">AC-2 (Account Management), AC-3 (Access Enforcement), AC-17 (Remote Access), and IA-2 (Identification and Authentication) sections require update to reflect current state findings from this assessment.</div>
+                <div class="check-action"><strong>Action:</strong> ISSO to update SSP with findings from this assessment before ATO submission. Target: 21 days.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">Data classification documented: Controlled Unclassified Information — Financial PII. Access justification required for all roles with PII scope.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">Audit logging: Application writes authentication and data access events to centralized SIEM. Log retention: 3 years per agency policy and NIST AU-11.</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">Background investigation: All users with access to this system are covered under NACI or higher investigation per position sensitivity level</div>
+              </div>
+            </div>
+
+            <div class="check-item">
+              <span class="check-badge pass">Pass</span>
+              <div class="check-content">
+                <div class="check-title">Least privilege enforced for standard roles: No user role grants access beyond the minimum required for the defined job function</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-finding">
+            <strong>Finding:</strong> Compliance foundation is solid. SSP gap is administrative and solvable within 3 weeks. CyberArk integration (Section 02) will close the remaining NIST AU-14 gap that currently prevents full ATO readiness.
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /accordion -->
+  </div>
+
+  <!-- Gap Summary Table -->
+  <div class="section-block">
+    <div class="section-header">
+      <span class="section-h">Open Gaps — Remediation Required</span>
+      <span style="font-family:var(--mono);font-size:10px;color:var(--text-muted)">7 items · as of 2025-03-12</span>
+    </div>
+    <div class="gap-table-wrap">
+      <table class="gap-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Section</th>
+            <th>Gap</th>
+            <th>Severity</th>
+            <th>Owner</th>
+            <th>Target Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-num">1</td>
+            <td class="td-section">Auth / PIV</td>
+            <td class="td-gap">PIV/CAC smartcard enrollment not enforced for application access — HSPD-12 mandate unmet; password-only path remains open</td>
+            <td><span class="sev-badge critical">Critical</span></td>
+            <td class="td-owner">ISSO / IAM Team</td>
+            <td class="td-date">Apr 11, 2025</td>
+          </tr>
+          <tr>
+            <td class="td-num">2</td>
+            <td class="td-section">CyberArk PAM</td>
+            <td class="td-gap">Application not onboarded to CyberArk vault — privileged credentials stored locally with no CPM-managed rotation policy</td>
+            <td><span class="sev-badge critical">Critical</span></td>
+            <td class="td-owner">PAM Team</td>
+            <td class="td-date">Apr 11, 2025</td>
+          </tr>
+          <tr>
+            <td class="td-num">3</td>
+            <td class="td-section">CyberArk PAM</td>
+            <td class="td-gap">Privileged Session Manager (PSM) not configured — privileged sessions are unrecorded; NIST AC-17 / AU-14 session monitoring controls unmet</td>
+            <td><span class="sev-badge critical">Critical</span></td>
+            <td class="td-owner">PAM Team</td>
+            <td class="td-date">Mar 26, 2025</td>
+          </tr>
+          <tr>
+            <td class="td-num">4</td>
+            <td class="td-section">RBAC</td>
+            <td class="td-gap">5 of 8 application roles have no designated owner — SoD rule validation and entitlement recertification cannot proceed without ownership assignments</td>
+            <td><span class="sev-badge high">High</span></td>
+            <td class="td-owner">Application Owner</td>
+            <td class="td-date">Apr 25, 2025</td>
+          </tr>
+          <tr>
+            <td class="td-num">5</td>
+            <td class="td-section">Access Reviews</td>
+            <td class="td-gap">Formal access review cycle not established for this application — NIST AC-2(j) periodic review requirement unmet; no schedule, scope, or reviewer assignments documented</td>
+            <td><span class="sev-badge high">High</span></td>
+            <td class="td-owner">ISSO / IAM Team</td>
+            <td class="td-date">Apr 11, 2025</td>
+          </tr>
+          <tr>
+            <td class="td-num">6</td>
+            <td class="td-section">Identity Lifecycle</td>
+            <td class="td-gap">Service account lifecycle undefined — 14 service accounts lack a documented owner, review cadence, or decommission procedure</td>
+            <td><span class="sev-badge medium">Medium</span></td>
+            <td class="td-owner">Application Owner</td>
+            <td class="td-date">Mar 26, 2025</td>
+          </tr>
+          <tr>
+            <td class="td-num">7</td>
+            <td class="td-section">FISMA / SSP</td>
+            <td class="td-gap">SSP sections 9.1–9.3 (access control procedures) incomplete — ATO boundary documentation does not reflect current application architecture</td>
+            <td><span class="sev-badge medium">Medium</span></td>
+            <td class="td-owner">ISSO</td>
+            <td class="td-date">Mar 19, 2025</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Recommendation -->
+  <div class="rec-panel">
+    <div class="rec-header">
+      <div class="rec-eyebrow">Readiness Recommendation</div>
+      <div class="rec-title">DO NOT GRANT ATO extension until critical PAM and authentication gaps are resolved.</div>
+    </div>
+    <div class="rec-body">
+      <div class="priority-list">
+        <div class="priority-item">
+          <span class="priority-n">1</span>
+          <p class="priority-text"><strong>Enforce PIV/CAC for all application access paths</strong> — resolves gap #1. Work with Entra ID Conditional Access team to block password-only authentication and require HSPD-12 compliant smartcard. Prerequisite for ATO continuation.</p>
+          <span class="priority-tag">14 days</span>
+        </div>
+        <div class="priority-item">
+          <span class="priority-n">2</span>
+          <p class="priority-text"><strong>Onboard application to CyberArk vault and configure CPM rotation</strong> — resolves gaps #2 and #3. Vault safe creation, account onboarding, and CPM platform policy assignment. PSM session recording to be configured in parallel.</p>
+          <span class="priority-tag">30 days</span>
+        </div>
+        <div class="priority-item">
+          <span class="priority-n">3</span>
+          <p class="priority-text"><strong>Assign role owners and establish semi-annual access review schedule</strong> — resolves gaps #4 and #5. ISSO to document reviewer assignments, scope, and approval workflow in SSP appendix.</p>
+          <span class="priority-tag">30 days</span>
+        </div>
+        <div class="priority-item">
+          <span class="priority-n">4</span>
+          <p class="priority-text"><strong>Complete SSP sections 9.1–9.3 and update ATO boundary documentation</strong> — resolves gap #7. ISSO to submit updated SSP to authorizing official within 45 days.</p>
+          <span class="priority-tag">45 days</span>
+        </div>
+      </div>
+
+      <div class="timeline-row">
+        <div class="timeline-block">
+          <span class="timeline-label">Estimated readiness</span>
+          <span class="timeline-value amber">45–60 days from assessment</span>
+        </div>
+        <div class="timeline-block">
+          <span class="timeline-label">Next checkpoint</span>
+          <span class="timeline-value">Apr 15, 2025 — CyberArk vault onboarding review</span>
+        </div>
+        <div class="timeline-block">
+          <span class="timeline-label">ATO target</span>
+          <span class="timeline-value">May 2025 (conditional on gaps #1–3)</span>
+        </div>
+      </div>
+    </div>
+    <div class="rec-footer">
+      <span class="rec-footer-item"><strong>Assessment owner:</strong> Janaya Hoskins, GS-12</span>
+      <span class="rec-footer-item"><strong>Assessment date:</strong> March 12, 2025</span>
+      <span class="rec-footer-item"><strong>Application:</strong> Meridian Financial Platform</span>
+      <span class="rec-footer-item"><strong>Framework:</strong> CyberArk PAM · Entra ID · FISMA Moderate</span>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+function toggle(id) {
+  const item = document.getElementById(id);
+  const trigger = item.querySelector('.acc-trigger');
+  const isOpen = item.classList.contains('open');
+  item.classList.toggle('open', !isOpen);
+  trigger.setAttribute('aria-expanded', String(!isOpen));
+}
+
+// Animate bar fills on load
+document.addEventListener('DOMContentLoaded', () => {
+  const fills = document.querySelectorAll('.dim-fill');
+  fills.forEach(f => {
+    const target = f.style.width;
+    f.style.width = '0%';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        f.style.width = target;
+      });
+    });
+  });
+});
+</script>
